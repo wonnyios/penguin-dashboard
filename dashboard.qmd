@@ -146,7 +146,7 @@ chart_theme = theme_minimal() + theme(
 #| content: valuebox
 #| title: "Total Penguin Observations"
 #| icon: egg-fried
-#| color: primary
+#| color: "#173F73"
 
 dict(value=f"{total_penguins:,}")
 ```
@@ -155,7 +155,7 @@ dict(value=f"{total_penguins:,}")
 #| content: valuebox
 #| title: "Number of Species"
 #| icon: award
-#| color: info
+#| color: "#438CCB"
 
 dict(value=str(total_species))
 ```
@@ -164,7 +164,7 @@ dict(value=str(total_species))
 #| content: valuebox
 #| title: "Number of Islands"
 #| icon: globe
-#| color: secondary
+#| color: "#91C9F2"
 
 dict(value=str(total_islands))
 ```
