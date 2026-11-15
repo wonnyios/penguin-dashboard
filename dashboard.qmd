@@ -2,7 +2,6 @@
 ---
 title: "Palmer Penguins Dashboard"
 subtitle: "Species and Island Distribution Analysis"
-author: "Giann Carlo Torino"
 format:
   dashboard:
     theme: cosmo
