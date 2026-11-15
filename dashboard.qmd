@@ -1,7 +1,6 @@
-
 ---
 title: "Palmer Penguins Dashboard"
-subtitle: "Species and Island Distribution"
+subtitle: "Species and Island Distribution Analysis"
 author: "Your Name"
 format:
   dashboard:
@@ -18,48 +17,85 @@ import pandas as pd
 from palmerpenguins import load_penguins
 from plotnine import (
     ggplot, aes, geom_col, geom_text,
-    labs, theme_minimal, theme, element_text
+    labs, theme_minimal, theme,
+    scale_fill_manual, element_text,
+    scale_y_continuous, expand_limits
 )
 
+# Load the Palmer Penguins dataset
 penguins = load_penguins()
 
+# Remove rows with missing species or island information
 clean = penguins.dropna(subset=["species", "island"])
 
+# Count penguins by species
 species_counts = (
     clean.groupby("species")
     .size()
     .reset_index(name="observations")
 )
 
+# Count penguins by island
 island_counts = (
     clean.groupby("island")
     .size()
     .reset_index(name="observations")
 )
 
-total = len(clean)
-species_total = clean["species"].nunique()
-island_total = clean["island"].nunique()
+# Count penguin species on each island
+island_species = (
+    clean.groupby(["island", "species"])
+    .size()
+    .reset_index(name="observations")
+)
+
+# Summary statistics
+total_penguins = len(clean)
+total_species = clean["species"].nunique()
+total_islands = clean["island"].nunique()
+
+# Blue color palette for penguin species
+species_colors = {
+    "Adelie": "#173F73",
+    "Chinstrap": "#438CCB",
+    "Gentoo": "#91C9F2"
+}
+
+# Blue color palette for islands
+island_colors = {
+    "Biscoe": "#173F73",
+    "Dream": "#438CCB",
+    "Torgersen": "#91C9F2"
+}
 ```
 
 ## Summary Statistics
 
 ```{python}
 #| content: valuebox
-#| title: "Total Penguins"
+#| title: "Total Penguin Observations"
 #| icon: people
-#| color: primary
+#| color: "#173F73"
 
-dict(value=f"{total:,}")
+dict(value=f"{total_penguins:,}")
 ```
 
 ```{python}
 #| content: valuebox
-#| title: "Penguin Species"
+#| title: "Number of Species"
 #| icon: award
-#| color: success
+#| color: "#438CCB"
 
-dict(value=str(species_total))
+dict(value=str(total_species))
+```
+
+```{python}
+#| content: valuebox
+#| title: "Number of Islands"
+#| icon: globe
+#| color: "#91C9F2"
+
+dict(value=str(total_islands))
 ```
 
 ## Species Distribution
@@ -70,18 +106,31 @@ dict(value=str(species_total))
 (
     ggplot(
         species_counts,
-        aes(x="species", y="observations", fill="species")
+        aes(
+            x="species",
+            y="observations",
+            fill="species"
+        )
     )
     + geom_col(width=0.65)
     + geom_text(
         aes(label="observations"),
         va="bottom",
-        nudge_y=3
+        nudge_y=3,
+        size=10
+    )
+    + scale_fill_manual(values=species_colors)
+    + scale_y_continuous(
+        expand=(0, 0)
+    )
+    + expand_limits(
+        y=species_counts["observations"].max() * 1.12
     )
     + labs(
+        title="Number of Observations per Species",
         x="Penguin Species",
         y="Number of Observations",
-        title="Species Distribution"
+        fill="Species"
     )
     + theme_minimal()
 )
@@ -89,28 +138,41 @@ dict(value=str(species_total))
 
 **Interpretation:**
 
-Adelie penguins have the highest number of recorded observations, followed by Gentoo and Chinstrap penguins. This shows that Adelie is the most frequently represented species in the dataset. The distribution indicates that the three species do not have equal observation counts.
+Adelie penguins have the highest number of observations, with 152 recorded penguins, followed by Gentoo with 124 and Chinstrap with 68. This indicates that Adelie is the most frequently represented species in the Palmer Penguins dataset. The results show that the three species have different observation counts.
 
 ## Island Distribution
 
 ```{python}
-#| title: "Penguin Observations by Island"
+#| title: "Total Penguin Observations by Island"
 
 (
     ggplot(
         island_counts,
-        aes(x="island", y="observations", fill="island")
+        aes(
+            x="island",
+            y="observations",
+            fill="island"
+        )
     )
     + geom_col(width=0.65)
     + geom_text(
         aes(label="observations"),
         va="bottom",
-        nudge_y=3
+        nudge_y=3,
+        size=10
+    )
+    + scale_fill_manual(values=island_colors)
+    + scale_y_continuous(
+        expand=(0, 0)
+    )
+    + expand_limits(
+        y=island_counts["observations"].max() * 1.12
     )
     + labs(
+        title="Number of Penguins per Island",
         x="Island",
         y="Number of Observations",
-        title="Island Distribution"
+        fill="Island"
     )
     + theme_minimal()
 )
@@ -118,4 +180,37 @@ Adelie penguins have the highest number of recorded observations, followed by Ge
 
 **Interpretation:**
 
-Biscoe Island has the highest number of recorded penguins, followed by Dream and Torgersen Islands. This suggests that the dataset contains more penguin observations from Biscoe Island than from the other two islands. The distribution highlights differences in the number of recorded observations across locations.
+Biscoe Island has the highest number of recorded penguins, with 168 observations, followed by Dream Island with 124 and Torgersen Island with 52. This shows that Biscoe Island has the largest representation in the dataset. The observations are distributed differently across the three islands.
+
+## Species Distribution Across Islands
+
+```{python}
+#| title: "Penguin Species Across Different Islands"
+
+(
+    ggplot(
+        island_species,
+        aes(
+            x="island",
+            y="observations",
+            fill="species"
+        )
+    )
+    + geom_col(width=0.65)
+    + scale_fill_manual(values=species_colors)
+    + labs(
+        title="Distribution of Penguin Species Across Islands",
+        x="Island",
+        y="Number of Observations",
+        fill="Penguin Species"
+    )
+    + theme_minimal()
+    + theme(
+        legend_position="right"
+    )
+)
+```
+
+**Interpretation:**
+
+Adelie penguins are recorded on all three islands, while Gentoo penguins are found only on Biscoe Island and Chinstrap penguins only on Dream Island. Biscoe has both Adelie and Gentoo penguins, while Dream has Adelie and Chinstrap penguins. This demonstrates that the distribution of penguin species varies depending on the island.
