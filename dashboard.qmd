@@ -8,9 +8,12 @@ format:
     orientation: rows
     scrolling: true
 jupyter: python3
+execute:
+  echo: false
+  warning: false
 ---
 
-```{python}
+```{python} id="a1b2c3"
 #| include: false
 
 import pandas as pd
@@ -22,27 +25,27 @@ from plotnine import (
     expand_limits
 )
 
-# Load dataset
+# Load the Palmer Penguins dataset
 penguins = load_penguins()
 
-# Remove missing species and island values
+# Keep observations with known species and island
 clean = penguins.dropna(subset=["species", "island"])
 
-# Species counts
+# Species distribution
 species_counts = (
     clean.groupby("species")
     .size()
     .reset_index(name="observations")
 )
 
-# Island counts
+# Island distribution
 island_counts = (
     clean.groupby("island")
     .size()
     .reset_index(name="observations")
 )
 
-# Species counts across islands
+# Species distribution across islands
 island_species = (
     clean.groupby(["island", "species"])
     .size()
@@ -54,14 +57,13 @@ total_penguins = len(clean)
 total_species = clean["species"].nunique()
 total_islands = clean["island"].nunique()
 
-# Blue palette for species
+# Blue color palette
 species_colors = {
     "Adelie": "#173F73",
     "Chinstrap": "#438CCB",
     "Gentoo": "#91C9F2"
 }
 
-# Blue palette for islands
 island_colors = {
     "Biscoe": "#173F73",
     "Dream": "#438CCB",
@@ -71,45 +73,36 @@ island_colors = {
 
 ## Summary Statistics
 
-```{python}
+```{python} id="d4e5f6"
 #| content: valuebox
 #| title: "Total Penguin Observations"
+#| icon: egg-fried
+#| color: "#173F73"
 
-{
-    "value": f"{total_penguins:,}",
-    "icon": "egg-fried",
-    "bg-color": "#173F73",
-    "fg-color": "#FFFFFF"
-}
+dict(value=f"{total_penguins:,}")
 ```
 
-```{python}
+```{python} id="g7h8i9"
 #| content: valuebox
 #| title: "Number of Species"
+#| icon: award
+#| color: "#438CCB"
 
-{
-    "value": str(total_species),
-    "icon": "award",
-    "bg-color": "#438CCB",
-    "fg-color": "#FFFFFF"
-}
+dict(value=str(total_species))
 ```
 
-```{python}
+```{python} id="j1k2l3"
 #| content: valuebox
 #| title: "Number of Islands"
+#| icon: globe
+#| color: "#91C9F2"
 
-{
-    "value": str(total_islands),
-    "icon": "globe",
-    "bg-color": "#91C9F2",
-    "fg-color": "#FFFFFF"
-}
+dict(value=str(total_islands))
 ```
 
 ## Species Distribution
 
-```{python}
+```{python} id="m4n5o6"
 #| title: "Penguin Observations by Species"
 
 (
@@ -149,7 +142,7 @@ Adelie penguins have the highest number of observations, with 152 recorded pengu
 
 ## Island Distribution
 
-```{python}
+```{python} id="p7q8r9"
 #| title: "Total Penguin Observations by Island"
 
 (
@@ -189,7 +182,7 @@ Biscoe Island has the highest number of recorded penguins, with 168 observations
 
 ## Species Distribution Across Islands
 
-```{python}
+```{python} id="s1t2u3"
 #| title: "Penguin Species Across Different Islands"
 
 (
