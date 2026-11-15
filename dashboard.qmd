@@ -1,8 +1,8 @@
 
-
 ---
 title: "Palmer Penguins Dashboard"
 subtitle: "Species and Island Distribution Analysis"
+author: "Giann Carlo Torino"
 format:
   dashboard:
     theme: cosmo
@@ -35,18 +35,10 @@ h1, h2, h3 {
   border: none !important;
 }
 
-/* Remove the vertical divider in the summary boxes */
-.bslib-value-box .value-box-showcase,
-.bslib-value-box .value-box-showcase::before,
-.bslib-value-box .value-box-showcase::after {
-  border-left: none !important;
-  border-right: none !important;
-  box-shadow: none !important;
-}
-
-/* Keep summary box icons and content properly visible */
+/* Remove only the vertical divider beside the icons */
 .bslib-value-box .value-box-showcase {
-  background: transparent !important;
+  border-right: none !important;
+  border-left: none !important;
 }
 
 .card-header {
