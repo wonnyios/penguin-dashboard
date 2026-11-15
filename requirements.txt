@@ -1,1 +1,4 @@
-
+palmerpenguins
+plotnine
+pandas
+jupyter
