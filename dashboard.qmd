@@ -2,6 +2,7 @@
 ---
 title: "Palmer Penguins Dashboard"
 subtitle: "Species and Island Distribution Analysis"
+author: "Giann Carlo Torino"
 format:
   dashboard:
     theme: cosmo
@@ -34,17 +35,48 @@ h1, h2, h3 {
   border: none !important;
 }
 
-/* Remove only the vertical divider beside the icons */
+/* Remove the vertical divider beside the icon */
 .bslib-value-box .value-box-showcase {
-  border-right: 0 !important;
-  border-left: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
-/* Preserve the original value box appearance */
 .bslib-value-box .value-box-showcase::before,
 .bslib-value-box .value-box-showcase::after {
-  border: 0 !important;
-  box-shadow: none !important;
+  display: none !important;
+}
+
+/* Arrange the icon on the left and number above description */
+.bslib-value-box .value-box-grid {
+  grid-template-columns: auto 1fr !important;
+  grid-template-areas: "showcase content" !important;
+}
+
+.bslib-value-box .value-box-showcase {
+  grid-area: showcase !important;
+}
+
+.bslib-value-box .value-box-area {
+  grid-area: content !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  text-align: left !important;
+}
+
+/* Keep the number prominent */
+.bslib-value-box .value-box-area .value-box-value {
+  font-size: 2.5rem !important;
+  font-weight: 800 !important;
+  line-height: 1.1 !important;
+}
+
+/* Place description below the number */
+.bslib-value-box .value-box-area .value-box-title {
+  order: 2 !important;
+  font-size: 0.95rem !important;
+  font-weight: 600 !important;
 }
 
 .card-header {
