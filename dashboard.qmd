@@ -1,5 +1,4 @@
 
-
 ---
 title: "Palmer Penguins Dashboard"
 subtitle: "Species and Island Distribution Analysis"
@@ -33,6 +32,19 @@ h1, h2, h3 {
 
 .bslib-value-box {
   border: none !important;
+}
+
+/* Remove only the vertical divider beside the icons */
+.bslib-value-box .value-box-showcase {
+  border-right: 0 !important;
+  border-left: 0 !important;
+}
+
+/* Preserve the original value box appearance */
+.bslib-value-box .value-box-showcase::before,
+.bslib-value-box .value-box-showcase::after {
+  border: 0 !important;
+  box-shadow: none !important;
 }
 
 .card-header {
