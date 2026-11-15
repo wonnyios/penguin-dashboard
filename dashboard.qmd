@@ -1,7 +1,9 @@
 
+
 ---
 title: "Palmer Penguins Dashboard"
 subtitle: "Species and Island Distribution Analysis"
+author: "Giann Carlo Torino"
 format:
   dashboard:
     theme: cosmo
@@ -13,6 +15,36 @@ execute:
   warning: false
 ---
 
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800&display=swap');
+
+body, .quarto-dashboard, h1, h2, h3, p, div {
+  font-family: 'Lato', Arial, sans-serif;
+}
+
+h1 {
+  font-weight: 800;
+  color: #173F73;
+}
+
+h2, h3 {
+  font-weight: 700;
+  color: #173F73;
+}
+
+.bslib-value-box,
+.bslib-value-box * {
+  color: #FFFFFF !important;
+}
+
+.card-header {
+  font-family: 'Lato', Arial, sans-serif;
+  font-weight: 700;
+  color: #173F73;
+}
+
+</style>
+
 ```{python}
 #| include: false
 
@@ -22,7 +54,8 @@ from plotnine import (
     ggplot, aes, geom_col, geom_text,
     labs, theme_minimal, theme,
     scale_fill_manual, scale_y_continuous,
-    expand_limits
+    expand_limits, element_text, element_line,
+    element_blank
 )
 
 # Load dataset
@@ -69,6 +102,43 @@ island_colors = {
     "Dream": "#438CCB",
     "Torgersen": "#91C9F2"
 }
+
+# Consistent chart typography
+chart_theme = theme_minimal() + theme(
+    text=element_text(family="Lato", color="#263B50"),
+    plot_title=element_text(
+        family="Lato",
+        size=15,
+        weight="bold",
+        color="#173F73"
+    ),
+    axis_title=element_text(
+        family="Lato",
+        size=11,
+        weight="bold",
+        color="#173F73"
+    ),
+    axis_text=element_text(
+        family="Lato",
+        size=10,
+        color="#40566D"
+    ),
+    legend_title=element_text(
+        family="Lato",
+        size=10,
+        weight="bold",
+        color="#173F73"
+    ),
+    legend_text=element_text(
+        family="Lato",
+        size=9,
+        color="#40566D"
+    ),
+    panel_grid_major=element_line(color="#E5EEF7"),
+    panel_grid_minor=element_blank(),
+    plot_background=element_blank(),
+    figure_size=(9, 5)
+)
 ```
 
 ## Summary Statistics
@@ -115,7 +185,8 @@ dict(value=str(total_islands))
         aes(label="observations"),
         va="bottom",
         nudge_y=3,
-        size=10
+        size=10,
+        color="#173F73"
     )
     + scale_fill_manual(values=species_colors)
     + scale_y_continuous(expand=(0, 0))
@@ -128,7 +199,7 @@ dict(value=str(total_islands))
         y="Number of Observations",
         fill="Species"
     )
-    + theme_minimal()
+    + chart_theme
 )
 ```
 
@@ -151,7 +222,8 @@ Adelie penguins have the highest number of observations, with 152 recorded pengu
         aes(label="observations"),
         va="bottom",
         nudge_y=3,
-        size=10
+        size=10,
+        color="#173F73"
     )
     + scale_fill_manual(values=island_colors)
     + scale_y_continuous(expand=(0, 0))
@@ -164,7 +236,7 @@ Adelie penguins have the highest number of observations, with 152 recorded pengu
         y="Number of Observations",
         fill="Island"
     )
-    + theme_minimal()
+    + chart_theme
 )
 ```
 
@@ -190,7 +262,7 @@ Biscoe Island has the highest number of recorded penguins, with 168 observations
         y="Number of Observations",
         fill="Penguin Species"
     )
-    + theme_minimal()
+    + chart_theme
     + theme(legend_position="right")
 )
 ```
