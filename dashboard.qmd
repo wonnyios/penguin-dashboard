@@ -1,5 +1,3 @@
-
-
 ---
 title: "Palmer Penguins Dashboard"
 subtitle: "Species and Island Distribution Analysis"
@@ -17,18 +15,13 @@ execute:
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;500;600;700;800&display=swap');
 
-body, .quarto-dashboard, h1, h2, h3, p, div {
+body, .quarto-dashboard, h1, h2, h3, p {
   font-family: 'Lato', Arial, sans-serif;
 }
 
-h1 {
-  font-weight: 800;
+h1, h2, h3 {
   color: #173F73;
-}
-
-h2, h3 {
   font-weight: 700;
-  color: #173F73;
 }
 
 .bslib-value-box,
@@ -36,12 +29,15 @@ h2, h3 {
   color: #FFFFFF !important;
 }
 
+.bslib-value-box {
+  border: none !important;
+}
+
 .card-header {
   font-family: 'Lato', Arial, sans-serif;
   font-weight: 700;
   color: #173F73;
 }
-
 </style>
 
 ```{python}
@@ -49,35 +45,38 @@ h2, h3 {
 
 import pandas as pd
 from palmerpenguins import load_penguins
+
 from plotnine import (
     ggplot, aes, geom_col, geom_text,
     labs, theme_minimal, theme,
     scale_fill_manual, scale_y_continuous,
-    expand_limits, element_text, element_line,
-    element_blank
+    expand_limits, element_text,
+    element_line, element_blank
 )
 
-# Load dataset
+# Load Palmer Penguins dataset
 penguins = load_penguins()
 
 # Remove missing species and island information
-clean = penguins.dropna(subset=["species", "island"])
+clean = penguins.dropna(
+    subset=["species", "island"]
+)
 
-# Count observations by species
+# Species distribution
 species_counts = (
     clean.groupby("species")
     .size()
     .reset_index(name="observations")
 )
 
-# Count observations by island
+# Island distribution
 island_counts = (
     clean.groupby("island")
     .size()
     .reset_index(name="observations")
 )
 
-# Count species on each island
+# Species distribution across islands
 island_species = (
     clean.groupby(["island", "species"])
     .size()
@@ -89,54 +88,58 @@ total_penguins = len(clean)
 total_species = clean["species"].nunique()
 total_islands = clean["island"].nunique()
 
-# Blue color palette
+# Blue palette for species
 species_colors = {
     "Adelie": "#173F73",
     "Chinstrap": "#438CCB",
     "Gentoo": "#91C9F2"
 }
 
+# Blue palette for islands
 island_colors = {
     "Biscoe": "#173F73",
     "Dream": "#438CCB",
     "Torgersen": "#91C9F2"
 }
 
-# Consistent chart typography
-chart_theme = theme_minimal() + theme(
-    text=element_text(family="Lato", color="#263B50"),
-    plot_title=element_text(
-        family="Lato",
-        size=15,
-        weight="bold",
-        color="#173F73"
-    ),
-    axis_title=element_text(
-        family="Lato",
-        size=11,
-        weight="bold",
-        color="#173F73"
-    ),
-    axis_text=element_text(
-        family="Lato",
-        size=10,
-        color="#40566D"
-    ),
-    legend_title=element_text(
-        family="Lato",
-        size=10,
-        weight="bold",
-        color="#173F73"
-    ),
-    legend_text=element_text(
-        family="Lato",
-        size=9,
-        color="#40566D"
-    ),
-    panel_grid_major=element_line(color="#E5EEF7"),
-    panel_grid_minor=element_blank(),
-    plot_background=element_blank(),
-    figure_size=(9, 5)
+# Consistent chart typography and styling
+chart_theme = (
+    theme_minimal()
+    + theme(
+        text=element_text(
+            family="Lato",
+            color="#263B50"
+        ),
+        plot_title=element_text(
+            size=15,
+            weight="bold",
+            color="#173F73"
+        ),
+        axis_title=element_text(
+            size=11,
+            weight="bold",
+            color="#173F73"
+        ),
+        axis_text=element_text(
+            size=10,
+            color="#40566D"
+        ),
+        legend_title=element_text(
+            size=10,
+            weight="bold",
+            color="#173F73"
+        ),
+        legend_text=element_text(
+            size=9,
+            color="#40566D"
+        ),
+        panel_grid_major=element_line(
+            color="#E5EEF7"
+        ),
+        panel_grid_minor=element_blank(),
+        plot_background=element_blank(),
+        figure_size=(9, 5)
+    )
 )
 ```
 
@@ -146,27 +149,33 @@ chart_theme = theme_minimal() + theme(
 #| content: valuebox
 #| title: "Total Penguin Observations"
 #| icon: egg-fried
-#| color: "#173F73"
 
-dict(value=f"{total_penguins:,}")
+dict(
+    value=f"{total_penguins:,}",
+    color="#173F73"
+)
 ```
 
 ```{python}
 #| content: valuebox
 #| title: "Number of Species"
 #| icon: award
-#| color: "#438CCB"
 
-dict(value=str(total_species))
+dict(
+    value=str(total_species),
+    color="#286DA8"
+)
 ```
 
 ```{python}
 #| content: valuebox
 #| title: "Number of Islands"
 #| icon: globe
-#| color: "#91C9F2"
 
-dict(value=str(total_islands))
+dict(
+    value=str(total_islands),
+    color="#397FB8"
+)
 ```
 
 ## Species Distribution
@@ -177,7 +186,11 @@ dict(value=str(total_islands))
 (
     ggplot(
         species_counts,
-        aes(x="species", y="observations", fill="species")
+        aes(
+            x="species",
+            y="observations",
+            fill="species"
+        )
     )
     + geom_col(width=0.65)
     + geom_text(
@@ -187,8 +200,12 @@ dict(value=str(total_islands))
         size=10,
         color="#173F73"
     )
-    + scale_fill_manual(values=species_colors)
-    + scale_y_continuous(expand=(0, 0))
+    + scale_fill_manual(
+        values=species_colors
+    )
+    + scale_y_continuous(
+        expand=(0, 0)
+    )
     + expand_limits(
         y=species_counts["observations"].max() * 1.12
     )
@@ -214,7 +231,11 @@ Adelie penguins have the highest number of observations, with 152 recorded pengu
 (
     ggplot(
         island_counts,
-        aes(x="island", y="observations", fill="island")
+        aes(
+            x="island",
+            y="observations",
+            fill="island"
+        )
     )
     + geom_col(width=0.65)
     + geom_text(
@@ -224,8 +245,12 @@ Adelie penguins have the highest number of observations, with 152 recorded pengu
         size=10,
         color="#173F73"
     )
-    + scale_fill_manual(values=island_colors)
-    + scale_y_continuous(expand=(0, 0))
+    + scale_fill_manual(
+        values=island_colors
+    )
+    + scale_y_continuous(
+        expand=(0, 0)
+    )
     + expand_limits(
         y=island_counts["observations"].max() * 1.12
     )
@@ -251,10 +276,16 @@ Biscoe Island has the highest number of recorded penguins, with 168 observations
 (
     ggplot(
         island_species,
-        aes(x="island", y="observations", fill="species")
+        aes(
+            x="island",
+            y="observations",
+            fill="species"
+        )
     )
     + geom_col(width=0.65)
-    + scale_fill_manual(values=species_colors)
+    + scale_fill_manual(
+        values=species_colors
+    )
     + labs(
         title="Distribution of Penguin Species Across Islands",
         x="Island",
@@ -262,7 +293,9 @@ Biscoe Island has the highest number of recorded penguins, with 168 observations
         fill="Penguin Species"
     )
     + chart_theme
-    + theme(legend_position="right")
+    + theme(
+        legend_position="right"
+    )
 )
 ```
 
