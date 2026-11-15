@@ -262,7 +262,7 @@ chart_theme = (
 ```{python}
 # content: valuebox
 # title: "Total Penguin Observations"
-# icon: penguin head
+# icon: egg-fried
 
 dict(
     value=f"{total_penguins:,}",
@@ -284,7 +284,7 @@ dict(
 ```{python}
 # content: valuebox
 # title: "Number of Islands"
-# icon: location logo
+# icon: globe
 
 dict(
     value=str(total_islands),
