@@ -1,1 +1,121 @@
 
+---
+title: "Palmer Penguins Dashboard"
+subtitle: "Species and Island Distribution"
+author: "Your Name"
+format:
+  dashboard:
+    theme: cosmo
+    orientation: rows
+    scrolling: true
+jupyter: python3
+---
+
+```{python}
+#| include: false
+
+import pandas as pd
+from palmerpenguins import load_penguins
+from plotnine import (
+    ggplot, aes, geom_col, geom_text,
+    labs, theme_minimal, theme, element_text
+)
+
+penguins = load_penguins()
+
+clean = penguins.dropna(subset=["species", "island"])
+
+species_counts = (
+    clean.groupby("species")
+    .size()
+    .reset_index(name="observations")
+)
+
+island_counts = (
+    clean.groupby("island")
+    .size()
+    .reset_index(name="observations")
+)
+
+total = len(clean)
+species_total = clean["species"].nunique()
+island_total = clean["island"].nunique()
+```
+
+## Summary Statistics
+
+```{python}
+#| content: valuebox
+#| title: "Total Penguins"
+#| icon: people
+#| color: primary
+
+dict(value=f"{total:,}")
+```
+
+```{python}
+#| content: valuebox
+#| title: "Penguin Species"
+#| icon: award
+#| color: success
+
+dict(value=str(species_total))
+```
+
+## Species Distribution
+
+```{python}
+#| title: "Penguin Observations by Species"
+
+(
+    ggplot(
+        species_counts,
+        aes(x="species", y="observations", fill="species")
+    )
+    + geom_col(width=0.65)
+    + geom_text(
+        aes(label="observations"),
+        va="bottom",
+        nudge_y=3
+    )
+    + labs(
+        x="Penguin Species",
+        y="Number of Observations",
+        title="Species Distribution"
+    )
+    + theme_minimal()
+)
+```
+
+**Interpretation:**
+
+Adelie penguins have the highest number of recorded observations, followed by Gentoo and Chinstrap penguins. This shows that Adelie is the most frequently represented species in the dataset. The distribution indicates that the three species do not have equal observation counts.
+
+## Island Distribution
+
+```{python}
+#| title: "Penguin Observations by Island"
+
+(
+    ggplot(
+        island_counts,
+        aes(x="island", y="observations", fill="island")
+    )
+    + geom_col(width=0.65)
+    + geom_text(
+        aes(label="observations"),
+        va="bottom",
+        nudge_y=3
+    )
+    + labs(
+        x="Island",
+        y="Number of Observations",
+        title="Island Distribution"
+    )
+    + theme_minimal()
+)
+```
+
+**Interpretation:**
+
+Biscoe Island has the highest number of recorded penguins, followed by Dream and Torgersen Islands. This suggests that the dataset contains more penguin observations from Biscoe Island than from the other two islands. The distribution highlights differences in the number of recorded observations across locations.
