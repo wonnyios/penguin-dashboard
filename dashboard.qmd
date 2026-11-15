@@ -260,9 +260,9 @@ chart_theme = (
 ## Summary Statistics
 
 ```{python}
-#| content: valuebox
-#| title: "Total Penguin Observations"
-#| icon: egg-fried
+# content: valuebox
+# title: "Total Penguin Observations"
+# icon: penguin head
 
 dict(
     value=f"{total_penguins:,}",
@@ -271,9 +271,9 @@ dict(
 ```
 
 ```{python}
-#| content: valuebox
-#| title: "Number of Species"
-#| icon: award
+# content: valuebox
+# title: "Number of Species"
+# icon: award
 
 dict(
     value=str(total_species),
@@ -282,9 +282,9 @@ dict(
 ```
 
 ```{python}
-#| content: valuebox
-#| title: "Number of Islands"
-#| icon: globe
+# content: valuebox
+# title: "Number of Islands"
+# icon: location logo
 
 dict(
     value=str(total_islands),
